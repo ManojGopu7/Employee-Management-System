@@ -1,0 +1,47 @@
+package com.gopu.www.service;
+
+import java.lang.module.ResolutionException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+
+import com.gopu.www.exception.ResourceNotFoundException;
+import com.gopu.www.model.Employee;
+import com.gopu.www.repo.EmployeeRepository;
+
+@Service
+public class EmployeeService {
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
+	public List<Employee> getAllEmployees()
+	{
+		return employeeRepository.findAll();
+	}
+
+	public Employee addEmployee(Employee employee)
+	{
+		return employeeRepository.save(employee);
+	}
+	
+	public Employee getEmployeeById(long id)
+	{
+		return employeeRepository.findById(id).orElseThrow(()->new ResolutionException("Id Not Found"));
+	}
+	
+	public ResponseEntity<Employee> updateEmployeeById(long id,Employee employee)
+	{
+		Employee oldEmp=employeeRepository.findById(employee.getId()).orElseThrow(()-> new ResourceNotFoundException("Id Not Found"));
+		oldEmp.setFirstName(employee.getFirstName());
+		oldEmp.setLastName(employee.getLastName());
+		oldEmp.setEmail(employee.getEmail());
+		
+		Employee updateEmp=employeeRepository.save(oldEmp);
+		return ResponseEntity.ok(updateEmp);
+		
+	}
+
+}

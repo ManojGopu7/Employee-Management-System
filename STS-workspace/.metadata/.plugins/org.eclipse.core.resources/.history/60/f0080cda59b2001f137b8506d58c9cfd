@@ -1,0 +1,35 @@
+package com.gopu.www.service;
+
+import java.lang.module.ResolutionException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.gopu.www.model.Employee;
+import com.gopu.www.repo.EmployeeRepository;
+
+@Service
+public class EmployeeService {
+	
+	@Autowired
+	EmployeeRepository employeeRepository;
+	
+	public List<Employee> getAllEmployees()
+	{
+		return employeeRepository.findAll();
+	}
+
+	public Employee addEmployee(Employee employee)
+	{
+		return employeeRepository.save(employee);
+	}
+	
+	public Employee getEmployeeById(long id)
+	{
+		return employeeRepository.findById(id).orElseThrow(()->new ResolutionException("Id Not Found"));
+	}
+	
+
+}
